@@ -1,0 +1,29 @@
+{% extends "Base.html" %}
+{% block Productos %}
+<section class="seccion">
+    <h1>Productos</h1>
+    <p><a href="{% url 'AgregarProducto' %}">Agregar otro producto</a></p>
+
+    {% if tabla %}
+    <div class="grid-productos">
+        {% for i in tabla %}
+        <article class="card-producto">
+            <div class="card-producto__media" aria-hidden="true"></div>
+            <div class="card-producto__body">
+                <span class="card-producto__precio">${{ i.Precio|floatformat:2 }}</span>
+                <h2 class="card-producto__titulo">{{ i.Nombre }}</h2>
+                <p class="card-producto__meta">
+                    <span class="card-producto__stock">Stock: {{ i.Cantidad }}</span>
+                    <span class="card-producto__chip">{{ i.Categoria }}</span>
+                </p>
+                <p class="card-producto__desc">{{ i.Descripcion|truncatechars:90 }}</p>
+                <p class="card-producto__pie">#{{ i.Codigo }} · {{ i.fecha_ingreso|date:"d/m/Y" }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No hay productos cargados. <a href="{% url 'AgregarProducto' %}">Agregar el primero</a></p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "Base.html" %}
+{% block Productos %}
+<section class="seccion seccion--inicio">
+    <h1>Slytherin — Bodega de la casa</h1>
+    <p>
+        Inventario para la casa de Salazar: astucia, ambición y recursos discretos.
+        Cada producto tiene un <strong>código</strong> automático como clave primaria.
+    </p>
+    <p>
+        {% if total_productos == 0 %}
+        Aún no hay productos cargados.
+        {% else %}
+        Hay <strong>{{ total_productos }}</strong> producto(s) en el inventario.
+        {% endif %}
+    </p>
+    <p class="enlaces-inicio">
+        <a href="{% url 'AgregarProducto' %}">Agregar productos</a>
+        ·
+        <a href="{% url 'Productos' %}">Ver productos</a>
+    </p>
+</section>
+{% endblock %}
