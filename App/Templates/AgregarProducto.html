@@ -4,38 +4,41 @@
     <h1>Agregar producto</h1>
     <p class="form-agregar__intro">Campos obligatorios: nombre, precio, cantidad, descripción. Extra: categoría y fecha de ingreso (se guarda hoy al confirmar).</p>
 
-    {% if errores %}
+    {% if form.errors %}
     <ul class="errores form-agregar__errores">
-        {% for e in errores %}
-        <li>{{ e }}</li>
+        {% for field_errors in form.errors.values %}
+            {% for e in field_errors %}
+                <li>{{ e }}</li>
+            {% endfor %}
         {% endfor %}
     </ul>
     {% endif %}
 
     <form class="form-agregar" method="post" action="{% url 'AgregarProducto' %}">
         {% csrf_token %}
+        {{ form.fecha_ingreso }}
         <div class="form-agregar__campos">
             <div class="form-agregar__grupo">
-                <label for="id-nombre">Nombre (máx. 25)</label>
-                <input id="id-nombre" type="text" name="nombre" maxlength="25" required value="{{ nombre|default:'' }}">
+                <label for="{{ form.Nombre.id_for_label }}">Nombre (máx. 25)</label>
+                {{ form.Nombre }}
             </div>
             <div class="form-agregar__fila">
                 <div class="form-agregar__grupo form-agregar__grupo--mitad">
-                    <label for="id-precio">Precio</label>
-                    <input id="id-precio" type="text" name="precio" required value="{{ precio|default:'' }}" >
+                    <label for="{{ form.Precio.id_for_label }}">Precio</label>
+                    {{ form.Precio }}
                 </div>
                 <div class="form-agregar__grupo form-agregar__grupo--mitad">
-                    <label for="id-cantidad">Cantidad</label>
-                    <input id="id-cantidad" type="number" name="cantidad" min="0" step="1" required value="{{ cantidad|default:'' }}">
+                    <label for="{{ form.Cantidad.id_for_label }}">Cantidad</label>
+                    {{ form.Cantidad }}
                 </div>
             </div>
             <div class="form-agregar__grupo">
-                <label for="id-categoria">Categoría</label>
-                <input id="id-categoria" type="text" name="categoria" maxlength="80" required value="{{ categoria|default:'' }}">
+                <label for="{{ form.Categoria.id_for_label }}">Categoría</label>
+                {{ form.Categoria }}
             </div>
             <div class="form-agregar__grupo">
-                <label for="id-descripcion">Descripción</label>
-                <textarea id="id-descripcion" name="descripcion" rows="4" required>{{ descripcion|default:'' }}</textarea>
+                <label for="{{ form.Descripcion.id_for_label }}">Descripción</label>
+                {{ form.Descripcion }}
             </div>
         </div>
         <div class="form-agregar__acciones">

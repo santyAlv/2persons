@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
+from .forms import FormularioProductos
 from .models import *
 
 
@@ -21,56 +22,13 @@ def Productos(request):
 
 def AgregarProducto(request):
     if request.method == "POST":
-        nombre = (request.POST.get("nombre") or "").strip()
-        try:
-            precio_raw = request.POST.get("precio")
-            precio_raw = precio_raw.replace(",", ".") if precio_raw else ""
-            precio_val = float(precio_raw)
-        except (TypeError, ValueError):
-            precio_val = None
-        try:
-            cantidad = int(request.POST.get("cantidad") or "")
-        except (TypeError, ValueError):
-            cantidad = None
-        descripcion = (request.POST.get("descripcion") or "").strip()
-        categoria = (request.POST.get("categoria") or "").strip()
+        form = FormularioProductos(request.POST)
+        if form.is_valid():
+           
+            form.instance.fecha_ingreso = timezone.now().date()
+            form.save()
+            return redirect("Productos")
+    else:
+        form = FormularioProductos()
 
-        errores = []
-        if not nombre:
-            errores.append("El nombre es obligatorio.")
-        elif len(nombre) > 25:
-            errores.append("El nombre admite como máximo 25 caracteres.")
-        if precio_val is None or precio_val < 0:
-            errores.append("Indicá un precio válido (número mayor o igual a 0).")
-        if cantidad is None or cantidad < 0:
-            errores.append("Indicá una cantidad válida (entero mayor o igual a 0).")
-        if not descripcion:
-            errores.append("La descripción es obligatoria.")
-        if not categoria:
-            errores.append("La categoría es obligatoria.")
-
-        if errores:
-            return render(
-                request,
-                "AgregarProducto.html",
-                {
-                    "errores": errores,
-                    "nombre": nombre,
-                    "precio": request.POST.get("precio") or "",
-                    "cantidad": request.POST.get("cantidad") or "",
-                    "descripcion": descripcion,
-                    "categoria": categoria,
-                },
-            )
-
-        Producto.objects.create(
-            Nombre=nombre,
-            Precio=precio_val,
-            Cantidad=cantidad,
-            Descripcion=descripcion,
-            Categoria=categoria,
-            fecha_ingreso=timezone.now().date(),
-        )
-        return redirect("Productos")
-
-    return render(request, "AgregarProducto.html", {})
+    return render(request, "AgregarProducto.html", {"form": form})
