@@ -22,7 +22,7 @@ def Productos(request):
 
 def AgregarProducto(request):
     if request.method == "POST":
-        form = FormularioProductos(request.POST)
+        form = FormularioProductos(request.POST, request.FILES)
         if form.is_valid():
            
             form.instance.fecha_ingreso = timezone.now().date()

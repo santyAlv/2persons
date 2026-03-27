@@ -8,7 +8,11 @@
     <div class="grid-productos">
         {% for i in tabla %}
         <article class="card-producto">
+            {% if i.Imagen %}
+            <img class="card-producto__media" src="{{ i.Imagen.url }}" alt="Imagen de {{ i.Nombre }}">
+            {% else %}
             <div class="card-producto__media" aria-hidden="true"></div>
+            {% endif %}
             <div class="card-producto__body">
                 <span class="card-producto__precio">${{ i.Precio|floatformat:2 }}</span>
                 <h2 class="card-producto__titulo">{{ i.Nombre }}</h2>

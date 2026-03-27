@@ -8,7 +8,14 @@ class FormularioProductos(forms.ModelForm):
   
     fecha_ingreso = forms.DateField(required=False, widget=forms.HiddenInput())
  
-    Precio = forms.CharField(max_length=32)
+    Precio = forms.DecimalField(
+        min_value=0,
+        decimal_places=2,
+        max_digits=10,
+        widget=forms.NumberInput(
+            attrs={"placeholder": "Precio", "inputmode": "decimal", "step": "0.01", "min": "0"}
+        ),
+    )
 
     class Meta:
         model = Producto
@@ -16,6 +23,7 @@ class FormularioProductos(forms.ModelForm):
             "Nombre",
             "Cantidad",
             "Precio",
+            "Imagen",
             "Descripcion",
             "Categoria",
             "fecha_ingreso",
@@ -26,13 +34,11 @@ class FormularioProductos(forms.ModelForm):
             ),
             "Cantidad": forms.NumberInput(attrs={"min": "0", "step": "1"}),
          
-            "Precio": forms.TextInput(
-                attrs={"placeholder": "Precio", "inputmode": "decimal", "maxlength": "32"}
-            ),
             "Descripcion": forms.Textarea(attrs={"rows": 4}),
             "Categoria": forms.TextInput(
                 attrs={"maxlength": "80", "placeholder": "Categoría"}
             ),
+            "Imagen": forms.ClearableFileInput(attrs={"accept": "image/*"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -42,13 +48,10 @@ class FormularioProductos(forms.ModelForm):
 
     def clean_Precio(self):
         precio = self.cleaned_data.get("Precio")
-        
+
         if precio is None:
             return precio
-        if isinstance(precio, str):
-            precio = precio.strip().replace(",", ".")
-        precio_val = float(precio)
-        if precio_val < 0:
+        if precio < 0:
             raise forms.ValidationError("El precio debe ser mayor o igual a 0.")
-        return precio_val
+        return float(precio)
 

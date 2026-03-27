@@ -14,7 +14,7 @@
     </ul>
     {% endif %}
 
-    <form class="form-agregar" method="post" action="{% url 'AgregarProducto' %}">
+    <form class="form-agregar" method="post" enctype="multipart/form-data" action="{% url 'AgregarProducto' %}">
         {% csrf_token %}
         {{ form.fecha_ingreso }}
         <div class="form-agregar__campos">
@@ -35,6 +35,10 @@
             <div class="form-agregar__grupo">
                 <label for="{{ form.Categoria.id_for_label }}">Categoría</label>
                 {{ form.Categoria }}
+            </div>
+            <div class="form-agregar__grupo">
+                <label for="{{ form.Imagen.id_for_label }}">Imagen</label>
+                {{ form.Imagen }}
             </div>
             <div class="form-agregar__grupo">
                 <label for="{{ form.Descripcion.id_for_label }}">Descripción</label>
